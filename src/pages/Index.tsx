@@ -8,10 +8,13 @@ import PortfolioSection from '@/components/PortfolioSection';
 import ContactSection from '@/components/ContactSection';
 import AnnouncementBar from '@/components/AnnouncementBar';
 import FooterSection from '@/components/FooterSection';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const Index: React.FC = () => {
+  const { isRTL } = useLanguage();
+  
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <ParticleBackground />
       <Toaster position="top-right" />
       <AnnouncementBar />
