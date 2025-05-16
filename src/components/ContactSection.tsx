@@ -97,7 +97,7 @@ const ContactSection: React.FC = () => {
         <div className="glass-panel p-8 max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-iraq-gray mb-2">الاسم</label>
+              <label htmlFor="name" className="block text-iraq-gray mb-2">Name</label>
               <input type="text" id="name" name="name" value={form.name} onChange={handleChange} placeholder="Enter your name" className="futuristic-input" required />
               {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
             </div>
