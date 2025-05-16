@@ -70,9 +70,7 @@ const HeroSection: React.FC = () => {
           <FuturisticButton size="lg">
             Start Challenge
           </FuturisticButton>
-          <FuturisticButton variant="outline" size="lg">
-            Free Trial
-          </FuturisticButton>
+          
         </div>
       </div>
       
