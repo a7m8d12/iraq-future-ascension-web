@@ -18,7 +18,12 @@ const Navigation: React.FC = () => {
 
   const menuItems = [
     { label: 'Home', to: 'hero' },
+    { label: 'Services', to: 'services' },
     { label: 'Portfolio', to: 'portfolio' },
+    { label: 'FAQs', to: 'faqs' },
+    { label: 'Resources', to: 'resources' },
+    { label: 'About', to: 'about' },
+    { label: 'Partners', to: 'partners' },
     { label: 'Contact', to: 'contact' }
   ];
 
@@ -26,9 +31,10 @@ const Navigation: React.FC = () => {
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-black bg-opacity-80 backdrop-blur-md py-3 shadow-lg shadow-iraq-green/10' 
+          ? 'bg-black bg-opacity-95 backdrop-blur-md py-3 shadow-lg shadow-iraq-green/10' 
           : 'bg-transparent py-6'
       }`}
+      style={{ marginTop: '32px' }}
     >
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="flex items-center">
@@ -38,8 +44,8 @@ const Navigation: React.FC = () => {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
-          {menuItems.map((item) => (
+        <div className="hidden md:flex items-center space-x-4">
+          {menuItems.map((item, index) => (
             <Link
               key={item.to}
               to={item.to}
@@ -47,14 +53,19 @@ const Navigation: React.FC = () => {
               smooth={true}
               offset={-70}
               duration={1000}
-              className="text-iraq-gray hover:text-iraq-green cursor-pointer transition-colors"
+              className="text-iraq-gray hover:text-iraq-green cursor-pointer transition-colors px-2"
             >
               {item.label}
             </Link>
           ))}
-          <FuturisticButton variant="outline" size="sm">
-            Get Started
-          </FuturisticButton>
+          <div className="ml-4 flex items-center gap-2">
+            <FuturisticButton variant="outline" size="sm">
+              Login
+            </FuturisticButton>
+            <FuturisticButton size="sm">
+              Sign Up
+            </FuturisticButton>
+          </div>
         </div>
 
         {/* Mobile Menu Toggle */}
@@ -111,9 +122,14 @@ const Navigation: React.FC = () => {
               {item.label}
             </Link>
           ))}
-          <FuturisticButton variant="outline" size="md">
-            Get Started
-          </FuturisticButton>
+          <div className="flex flex-col gap-4 mt-4">
+            <FuturisticButton variant="outline" size="md">
+              Login
+            </FuturisticButton>
+            <FuturisticButton size="md">
+              Sign Up
+            </FuturisticButton>
+          </div>
         </div>
       </div>
     </nav>

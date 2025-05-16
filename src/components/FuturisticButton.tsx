@@ -28,21 +28,21 @@ const FuturisticButton: React.FC<FuturisticButtonProps> = ({
         
         // Style variants
         variant === 'default' && `
-          bg-iraq-green-dark text-iraq-gray hover:bg-iraq-green hover:text-black 
-          border border-iraq-green shadow-[0_0_10px_rgba(0,255,102,0.3)]
-          hover:shadow-[0_0_15px_rgba(0,255,102,0.5)]
+          bg-iraq-green text-black hover:bg-opacity-90
+          border border-transparent shadow-[0_0_10px_rgba(0,255,102,0.5)]
+          hover:shadow-[0_0_15px_rgba(0,255,102,0.8)]
           before:content-[''] before:absolute before:top-0 before:left-0 
-          before:w-full before:h-full before:bg-iraq-green before:opacity-0
-          before:transition-opacity hover:before:opacity-100 
-          before:z-0
+          before:w-full before:h-full before:bg-white before:opacity-0
+          before:transition-opacity hover:before:opacity-10 
+          before:z-0 font-bold
         `,
         variant === 'outline' && `
           bg-transparent text-iraq-green border border-iraq-green 
-          hover:text-iraq-green-light hover:border-iraq-green-light
+          hover:border-iraq-green-light hover:text-white
           shadow-[0_0_10px_rgba(0,255,102,0.2)] hover:shadow-[0_0_15px_rgba(0,255,102,0.4)]
         `,
         variant === 'ghost' && `
-          bg-transparent text-iraq-green hover:bg-iraq-green-dark 
+          bg-transparent text-iraq-green hover:bg-iraq-green-dark/20
           hover:text-iraq-green-light hover:shadow-[0_0_10px_rgba(0,255,102,0.3)]
         `,
         className
