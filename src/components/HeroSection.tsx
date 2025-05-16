@@ -58,9 +58,7 @@ const HeroSection: React.FC = () => {
         
         <p ref={taglineRef} className="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto text-iraq-gray" style={{
         transform: 'translateY(20px)'
-      }}>
-          Build Smart. Earn Big! Up to 95% profit share and $2M in funding
-        </p>
+      }}>أنا هنا لأصمم لك موقعًا إلكترونيًا مميزًا بأسعار مناسبة وخدمات احترافية تناسب احتياجاتك.</p>
         
         <div ref={buttonRef} className="flex flex-col md:flex-row gap-4 justify-center" style={{
         transform: 'translateY(20px)'
