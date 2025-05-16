@@ -1,28 +1,22 @@
-
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import FuturisticButton from './FuturisticButton';
-
 const ContactSection: React.FC = () => {
   const [form, setForm] = useState({
     name: '',
     email: '',
     message: ''
   });
-  
   const [errors, setErrors] = useState({
     name: '',
     email: '',
     message: ''
   });
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const validateEmail = (email: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
   };
-
   const validateField = (name: string, value: string) => {
     switch (name) {
       case 'name':
@@ -35,15 +29,16 @@ const ContactSection: React.FC = () => {
         return '';
     }
   };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    
+    const {
+      name,
+      value
+    } = e.target;
     setForm(prev => ({
       ...prev,
       [name]: value
     }));
-    
+
     // Real-time validation
     const errorMessage = validateField(name, value);
     setErrors(prev => ({
@@ -51,41 +46,40 @@ const ContactSection: React.FC = () => {
       [name]: errorMessage
     }));
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate all fields before submission
     const newErrors = {
       name: validateField('name', form.name),
       email: validateField('email', form.email),
       message: validateField('message', form.message)
     };
-    
     setErrors(newErrors);
-    
+
     // Check if there are any errors
     if (Object.values(newErrors).some(error => error)) {
       return;
     }
-    
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     setTimeout(() => {
       toast.success('Message sent successfully!', {
         description: 'We will get back to you shortly.',
-        position: 'bottom-right',
+        position: 'bottom-right'
       });
-      
+
       // Reset form
-      setForm({ name: '', email: '', message: '' });
+      setForm({
+        name: '',
+        email: '',
+        message: ''
+      });
       setIsSubmitting(false);
     }, 2000);
   };
-
-  return (
-    <section id="contact" className="py-24 relative">
+  return <section id="contact" className="py-24 relative">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-iraq-dark opacity-20"></div>
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-transparent to-iraq-dark opacity-20"></div>
@@ -95,71 +89,33 @@ const ContactSection: React.FC = () => {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             <span className="text-iraq-gray">Get in</span> <span className="glow-text">Touch</span>
           </h2>
-          <p className="text-iraq-gray max-w-2xl mx-auto">
-            Ready to bring your vision to life? Contact us today to discuss how we can help transform your ideas into reality.
-          </p>
+          <p className="text-iraq-gray max-w-2xl mx-auto">هل أنت مستعد لتحويل رؤيتك إلى واقع؟ تواصل معنا اليوم لنتحدث عن كيف يمكننا مساعدتك في تحقيق أفكارك وتطوير موقعك أو تطبيقك بأسلوب احترافي ومبتكر.
+
+        </p>
         </div>
         
         <div className="glass-panel p-8 max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-iraq-gray mb-2">Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                className="futuristic-input"
-                required
-              />
-              {errors.name && (
-                <p className="text-sm text-red-400 mt-1">{errors.name}</p>
-              )}
+              <input type="text" id="name" name="name" value={form.name} onChange={handleChange} placeholder="Enter your name" className="futuristic-input" required />
+              {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
             </div>
             
             <div>
               <label htmlFor="email" className="block text-iraq-gray mb-2">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                className="futuristic-input"
-                required
-              />
-              {errors.email && (
-                <p className="text-sm text-red-400 mt-1">{errors.email}</p>
-              )}
+              <input type="email" id="email" name="email" value={form.email} onChange={handleChange} placeholder="Enter your email" className="futuristic-input" required />
+              {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
             </div>
             
             <div>
               <label htmlFor="message" className="block text-iraq-gray mb-2">Message</label>
-              <textarea
-                id="message"
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Tell us about your project"
-                rows={5}
-                className="futuristic-input resize-none"
-                required
-              ></textarea>
-              {errors.message && (
-                <p className="text-sm text-red-400 mt-1">{errors.message}</p>
-              )}
+              <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your project" rows={5} className="futuristic-input resize-none" required></textarea>
+              {errors.message && <p className="text-sm text-red-400 mt-1">{errors.message}</p>}
             </div>
             
             <div className="text-center">
-              <FuturisticButton
-                type="submit"
-                size="lg"
-                disabled={isSubmitting}
-                className={isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}
-              >
+              <FuturisticButton type="submit" size="lg" disabled={isSubmitting} className={isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}>
                 {isSubmitting ? 'Sending...' : 'Send Message'}
               </FuturisticButton>
             </div>
@@ -205,8 +161,6 @@ const ContactSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ContactSection;
