@@ -63,9 +63,7 @@ const HeroSection: React.FC = () => {
         <div ref={buttonRef} className="flex flex-col md:flex-row gap-4 justify-center" style={{
         transform: 'translateY(20px)'
       }}>
-          <FuturisticButton size="lg">
-            Start Challenge
-          </FuturisticButton>
+          <FuturisticButton size="lg">تواصل الآن</FuturisticButton>
           
         </div>
       </div>
