@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
+import AboutSection from '@/components/AboutSection';
 import PortfolioSection from '@/components/PortfolioSection';
 import ContactSection from '@/components/ContactSection';
 import AnnouncementBar from '@/components/AnnouncementBar';
@@ -22,6 +23,7 @@ const Index: React.FC = () => {
       
       <main>
         <HeroSection />
+        <AboutSection />
         <PortfolioSection />
         <ContactSection />
       </main>
