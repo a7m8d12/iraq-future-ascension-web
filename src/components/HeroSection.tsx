@@ -54,7 +54,7 @@ const HeroSection: React.FC = () => {
         
         <p ref={subtitleRef} className="text-xl md:text-2xl lg:text-3xl mb-3 font-bold text-white" style={{
         transform: 'translateY(20px)'
-      }}>ابنِ بثقة</p>
+      }}>ابدأ مشروعك الرقمي بسهولة</p>
         
         <p ref={taglineRef} className="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto text-iraq-gray" style={{
         transform: 'translateY(20px)'
