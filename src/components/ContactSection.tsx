@@ -35,11 +35,16 @@ const ContactSection: React.FC = () => {
       { threshold: 0.1 }
     );
 
+    // Fix: Only observe the element if it exists
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
     return () => {
+      // Fix: Make sure to properly clean up the observer
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
       observer.disconnect();
     };
   }, []);
@@ -113,7 +118,10 @@ const ContactSection: React.FC = () => {
   };
 
   return (
-    <Element name="contact" className="py-24 relative" dir={isRTL ? 'rtl' : 'ltr'} ref={sectionRef}>
+    <Element name="contact" className="py-24 relative" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Note: Moving ref to this div that's guaranteed to exist */}
+      <div ref={sectionRef} className="absolute inset-0"></div>
+      
       {/* Enhanced background elements */}
       <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-iraq-dark/30 opacity-50"></div>
       <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-transparent to-iraq-dark/30 opacity-50"></div>
