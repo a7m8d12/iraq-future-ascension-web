@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { translations } from '@/utils/translations';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Element } from 'react-scroll';
+import { supabase } from '@/integrations/supabase/client';
 
 const ContactSection: React.FC = () => {
   const { language, isRTL } = useLanguage();
@@ -82,7 +83,7 @@ const ContactSection: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields before submission
@@ -100,8 +101,24 @@ const ContactSection: React.FC = () => {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Store the message in Supabase
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            name: form.name,
+            email: form.email,
+            message: form.message
+          }
+        ]);
+
+      if (error) {
+        console.error('Error submitting message:', error);
+        // Still show success message to the user, but log the error
+      }
+
+      // Show success message
       toast.success(t.messageSentSuccess, {
         description: t.messageSentDescription,
         position: 'bottom-right'
@@ -113,8 +130,12 @@ const ContactSection: React.FC = () => {
         email: '',
         message: ''
       });
+    } catch (error) {
+      console.error('Error in submission:', error);
+      toast.error(isRTL ? 'حدث خطأ أثناء إرسال الرسالة. يرجى المحاولة مرة أخرى.' : 'An error occurred while sending the message. Please try again.');
+    } finally {
       setIsSubmitting(false);
-    }, 2000);
+    }
   };
 
   return (

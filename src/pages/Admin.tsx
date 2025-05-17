@@ -6,15 +6,17 @@ import FuturisticButton from '@/components/FuturisticButton';
 import ParticleBackground from '@/components/ParticleBackground';
 import AdminPortfolioManager from '@/components/admin/AdminPortfolioManager';
 import AdminPartnersManager from '@/components/admin/AdminPartnersManager';
+import AdminAnnouncementsManager from '@/components/admin/AdminAnnouncementsManager';
 import { toast } from 'sonner';
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'partners'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'partners' | 'announcements'>('portfolio');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [stats, setStats] = useState({
     portfolioCount: 0,
-    partnersCount: 0
+    partnersCount: 0,
+    announcementsCount: 0
   });
   const navigate = useNavigate();
 
@@ -51,15 +53,21 @@ const Admin: React.FC = () => {
       const { count: partnersCount, error: partnersError } = await supabase
         .from('partners')
         .select('*', { count: 'exact', head: true });
+        
+      // Fetch announcements count
+      const { count: announcementsCount, error: announcementsError } = await supabase
+        .from('announcements')
+        .select('*', { count: 'exact', head: true });
 
-      if (portfolioError || partnersError) {
-        console.error('Error fetching stats:', portfolioError || partnersError);
+      if (portfolioError || partnersError || announcementsError) {
+        console.error('Error fetching stats:', portfolioError || partnersError || announcementsError);
         return;
       }
 
       setStats({
         portfolioCount: portfolioCount || 0,
-        partnersCount: partnersCount || 0
+        partnersCount: partnersCount || 0,
+        announcementsCount: announcementsCount || 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -112,7 +120,7 @@ const Admin: React.FC = () => {
         <div className="container mx-auto">
           <h2 className="text-xl font-semibold text-white mb-6">Dashboard</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-iraq-dark bg-opacity-70 backdrop-blur-sm border border-iraq-green-dark rounded-lg p-6 hover:border-iraq-green transition-all duration-300">
               <h3 className="text-iraq-gray text-lg mb-2">Portfolio Items</h3>
               <p className="text-3xl font-bold text-white">{stats.portfolioCount}</p>
@@ -122,6 +130,11 @@ const Admin: React.FC = () => {
               <h3 className="text-iraq-gray text-lg mb-2">Partners</h3>
               <p className="text-3xl font-bold text-white">{stats.partnersCount}</p>
             </div>
+            
+            <div className="bg-iraq-dark bg-opacity-70 backdrop-blur-sm border border-iraq-green-dark rounded-lg p-6 hover:border-iraq-green transition-all duration-300">
+              <h3 className="text-iraq-gray text-lg mb-2">Announcements</h3>
+              <p className="text-3xl font-bold text-white">{stats.announcementsCount}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -129,7 +142,7 @@ const Admin: React.FC = () => {
       {/* Content Management Tabs */}
       <section className="py-6 px-6">
         <div className="container mx-auto">
-          <div className="flex border-b border-iraq-green-dark mb-6">
+          <div className="flex border-b border-iraq-green-dark mb-6 flex-wrap">
             <button
               className={`px-4 py-2 font-medium ${
                 activeTab === 'portfolio'
@@ -150,6 +163,16 @@ const Admin: React.FC = () => {
             >
               Partners Manager
             </button>
+            <button
+              className={`px-4 py-2 font-medium ${
+                activeTab === 'announcements'
+                  ? 'text-iraq-green border-b-2 border-iraq-green'
+                  : 'text-iraq-gray hover:text-white'
+              }`}
+              onClick={() => setActiveTab('announcements')}
+            >
+              Announcements Manager
+            </button>
           </div>
           
           {activeTab === 'portfolio' && (
@@ -158,6 +181,10 @@ const Admin: React.FC = () => {
           
           {activeTab === 'partners' && (
             <AdminPartnersManager onUpdate={fetchStats} />
+          )}
+          
+          {activeTab === 'announcements' && (
+            <AdminAnnouncementsManager onUpdate={fetchStats} />
           )}
         </div>
       </section>
