@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import FuturisticButton from './FuturisticButton';
+import { useLanguage } from '@/hooks/useLanguage';
+import { translations } from '@/utils/translations';
+import { Mail, Phone, MapPin } from 'lucide-react';
+import { Element } from 'react-scroll';
+
 const ContactSection: React.FC = () => {
+  const { language, isRTL } = useLanguage();
+  const t = translations[language];
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -13,27 +21,49 @@ const ContactSection: React.FC = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   const validateEmail = (email: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
   };
+  
   const validateField = (name: string, value: string) => {
     switch (name) {
       case 'name':
-        return value.length < 2 ? 'Name must be at least 2 characters' : '';
+        return value.length < 2 ? (isRTL ? 'يجب أن يكون الاسم على الأقل حرفين' : 'Name must be at least 2 characters') : '';
       case 'email':
-        return !validateEmail(value) ? 'Please enter a valid email address' : '';
+        return !validateEmail(value) ? (isRTL ? 'يرجى إدخال بريد إلكتروني صحيح' : 'Please enter a valid email address') : '';
       case 'message':
-        return value.length < 10 ? 'Message must be at least 10 characters' : '';
+        return value.length < 10 ? (isRTL ? 'يجب أن تكون الرسالة على الأقل 10 أحرف' : 'Message must be at least 10 characters') : '';
       default:
         return '';
     }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setForm(prev => ({
       ...prev,
       [name]: value
@@ -46,6 +76,7 @@ const ContactSection: React.FC = () => {
       [name]: errorMessage
     }));
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -61,12 +92,13 @@ const ContactSection: React.FC = () => {
     if (Object.values(newErrors).some(error => error)) {
       return;
     }
+
     setIsSubmitting(true);
 
     // Simulate form submission
     setTimeout(() => {
-      toast.success('Message sent successfully!', {
-        description: 'We will get back to you shortly.',
+      toast.success(t.messageSentSuccess, {
+        description: t.messageSentDescription,
         position: 'bottom-right'
       });
 
@@ -79,88 +111,118 @@ const ContactSection: React.FC = () => {
       setIsSubmitting(false);
     }, 2000);
   };
-  return <section id="contact" className="py-24 relative">
-      {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-iraq-dark opacity-20"></div>
-      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-transparent to-iraq-dark opacity-20"></div>
+
+  return (
+    <Element name="contact" className="py-24 relative" dir={isRTL ? 'rtl' : 'ltr'} ref={sectionRef}>
+      {/* Enhanced background elements */}
+      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-transparent to-iraq-dark/30 opacity-50"></div>
+      <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-transparent to-iraq-dark/30 opacity-50"></div>
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-500 rounded-full filter blur-[150px] opacity-10 animate-pulse-slow"></div>
+        <div className="absolute -bottom-40 -right-20 w-96 h-96 bg-emerald-500 rounded-full filter blur-[150px] opacity-10 animate-pulse-slow" style={{animationDelay: '2s'}}></div>
+      </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            <span className="text-iraq-gray">Get in</span> <span className="glow-text">Touch</span>
+        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <span className="text-iraq-gray">{t.getInTouch}</span> <span className="glow-text">{t.contactUs}</span>
           </h2>
-          <p className="text-iraq-gray max-w-2xl mx-auto">هل أنت مستعد لتحويل رؤيتك إلى واقع؟ تواصل معنا اليوم لنتحدث عن كيف يمكننا مساعدتك في تحقيق أفكارك وتطوير موقعك أو تطبيقك بأسلوب احترافي ومبتكر.
-
-        </p>
+          <p className="text-iraq-gray max-w-2xl mx-auto text-lg">
+            {isRTL ? 'هل أنت مستعد لتحويل رؤيتك إلى واقع؟ تواصل معنا اليوم لنتحدث عن كيف يمكننا مساعدتك في تحقيق أفكارك وتطوير موقعك أو تطبيقك بأسلوب احترافي ومبتكر.' : 'Are you ready to transform your vision into reality? Contact us today to discuss how we can help you realize your ideas and develop your website or application professionally and innovatively.'}
+          </p>
         </div>
         
-        <div className="glass-panel p-8 max-w-3xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-iraq-gray mb-2">Name</label>
-              <input type="text" id="name" name="name" value={form.name} onChange={handleChange} placeholder="Enter your name" className="futuristic-input" required />
-              {errors.name && <p className="text-sm text-red-400 mt-1">{errors.name}</p>}
+        <div className={`backdrop-blur-xl bg-black/40 p-8 md:p-10 rounded-2xl border border-emerald-500/30 shadow-2xl shadow-emerald-500/10 max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`} style={{transitionDelay: '300ms'}}>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label htmlFor="name" className="block text-emerald-400 font-medium mb-2">{t.name}</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  name="name" 
+                  value={form.name} 
+                  onChange={handleChange} 
+                  placeholder={t.yourName} 
+                  className="w-full bg-gray-900/70 text-white border border-emerald-500/30 focus:border-emerald-400 rounded-lg py-3 px-4 outline-none transition-all duration-300 focus:ring-2 focus:ring-emerald-400/30" 
+                  required 
+                />
+                {errors.name && <p className="text-sm text-red-400 mt-2">{errors.name}</p>}
+              </div>
+              
+              <div>
+                <label htmlFor="email" className="block text-emerald-400 font-medium mb-2">{t.email}</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  value={form.email} 
+                  onChange={handleChange} 
+                  placeholder={t.yourEmail} 
+                  className="w-full bg-gray-900/70 text-white border border-emerald-500/30 focus:border-emerald-400 rounded-lg py-3 px-4 outline-none transition-all duration-300 focus:ring-2 focus:ring-emerald-400/30" 
+                  required 
+                />
+                {errors.email && <p className="text-sm text-red-400 mt-2">{errors.email}</p>}
+              </div>
             </div>
             
             <div>
-              <label htmlFor="email" className="block text-iraq-gray mb-2">Email</label>
-              <input type="email" id="email" name="email" value={form.email} onChange={handleChange} placeholder="Enter your email" className="futuristic-input" required />
-              {errors.email && <p className="text-sm text-red-400 mt-1">{errors.email}</p>}
-            </div>
-            
-            <div>
-              <label htmlFor="message" className="block text-iraq-gray mb-2">Message</label>
-              <textarea id="message" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about your project" rows={5} className="futuristic-input resize-none" required></textarea>
-              {errors.message && <p className="text-sm text-red-400 mt-1">{errors.message}</p>}
+              <label htmlFor="message" className="block text-emerald-400 font-medium mb-2">{t.message}</label>
+              <textarea 
+                id="message" 
+                name="message" 
+                value={form.message} 
+                onChange={handleChange} 
+                placeholder={t.yourMessage} 
+                rows={6} 
+                className="w-full bg-gray-900/70 text-white border border-emerald-500/30 focus:border-emerald-400 rounded-lg py-3 px-4 outline-none transition-all duration-300 focus:ring-2 focus:ring-emerald-400/30 resize-none" 
+                required
+              ></textarea>
+              {errors.message && <p className="text-sm text-red-400 mt-2">{errors.message}</p>}
             </div>
             
             <div className="text-center">
-              <FuturisticButton type="submit" size="lg" disabled={isSubmitting} className={isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}>
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+              <FuturisticButton type="submit" size="lg" disabled={isSubmitting} className={`px-10 py-3 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}>
+                {isSubmitting ? t.sending : t.sendMessage}
               </FuturisticButton>
             </div>
           </form>
           
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full bg-iraq-green-dark mb-4">
-                <svg className="w-6 h-6 text-iraq-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className={`text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '600ms'}}>
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 p-3 mb-5 mx-auto shadow-lg shadow-emerald-500/20">
+                <Mail className="h-8 w-8 text-emerald-400" />
               </div>
-              <h3 className="text-iraq-gray text-lg mb-1">Email</h3>
-              <a href="mailto:info@iraqfuture.com" className="text-iraq-green hover:text-iraq-green-light transition-colors">
+              <h3 className="text-white text-xl font-semibold mb-2">{t.email}</h3>
+              <a href="mailto:info@iraqfuture.com" className="text-emerald-400 hover:text-emerald-300 transition-colors">
                 info@iraqfuture.com
               </a>
             </div>
             
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full bg-iraq-green-dark mb-4">
-                <svg className="w-6 h-6 text-iraq-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
+            <div className={`text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '750ms'}}>
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 p-3 mb-5 mx-auto shadow-lg shadow-emerald-500/20">
+                <Phone className="h-8 w-8 text-emerald-400" />
               </div>
-              <h3 className="text-iraq-gray text-lg mb-1">Phone</h3>
-              <a href="tel:+1234567890" className="text-iraq-green hover:text-iraq-green-light transition-colors">
+              <h3 className="text-white text-xl font-semibold mb-2">{t.phone}</h3>
+              <a href="tel:+1234567890" className="text-emerald-400 hover:text-emerald-300 transition-colors">
                 +123 456 7890
               </a>
             </div>
             
-            <div className="text-center">
-              <div className="inline-block p-4 rounded-full bg-iraq-green-dark mb-4">
-                <svg className="w-6 h-6 text-iraq-green" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+            <div className={`text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{transitionDelay: '900ms'}}>
+              <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 p-3 mb-5 mx-auto shadow-lg shadow-emerald-500/20">
+                <MapPin className="h-8 w-8 text-emerald-400" />
               </div>
-              <h3 className="text-iraq-gray text-lg mb-1">Location</h3>
-              <p className="text-iraq-green">
+              <h3 className="text-white text-xl font-semibold mb-2">{t.location}</h3>
+              <p className="text-emerald-400">
                 Baghdad, Iraq
               </p>
             </div>
           </div>
         </div>
       </div>
-    </section>;
+    </Element>
+  );
 };
+
 export default ContactSection;

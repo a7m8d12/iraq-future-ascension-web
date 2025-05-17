@@ -5,7 +5,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import FuturisticButton from './FuturisticButton';
 import { useLanguage } from '@/hooks/useLanguage';
 import { translations } from '@/utils/translations';
-import { Globe } from 'lucide-react';
+import { Languages } from 'lucide-react';
 
 const Navigation: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -46,9 +46,10 @@ const Navigation: React.FC = () => {
           smooth={true}
           offset={-70}
           duration={1000}
-          className="text-iraq-gray hover:text-iraq-green cursor-pointer transition-colors px-2"
+          className="relative text-iraq-gray hover:text-iraq-green cursor-pointer transition-all px-3 py-2 group font-medium"
         >
           {item.label}
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-iraq-green group-hover:w-full transition-all duration-300 ease-in-out"></span>
         </ScrollLink>
       );
     } else {
@@ -56,9 +57,10 @@ const Navigation: React.FC = () => {
         <Link
           key={index}
           to={item.to}
-          className="text-iraq-gray hover:text-iraq-green cursor-pointer transition-colors px-2"
+          className="relative text-iraq-gray hover:text-iraq-green cursor-pointer transition-all px-3 py-2 group font-medium"
         >
           {item.label}
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-iraq-green group-hover:w-full transition-all duration-300 ease-in-out"></span>
         </Link>
       );
     }
@@ -68,7 +70,7 @@ const Navigation: React.FC = () => {
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-black bg-opacity-95 backdrop-blur-md py-3 shadow-lg shadow-iraq-green/10' 
+          ? 'bg-black bg-opacity-90 backdrop-blur-xl py-3 shadow-xl shadow-iraq-green/10 border-b border-iraq-green/20' 
           : 'bg-transparent py-6'
       }`}
       style={{ marginTop: '32px' }}
@@ -76,21 +78,23 @@ const Navigation: React.FC = () => {
     >
       <div className="container mx-auto flex justify-between items-center px-4">
         <div className="flex items-center">
-          <Link to="/" className="text-2xl font-bold text-iraq-green">
-            IRAQ <span className="text-iraq-gray">FUTURE</span>
+          <Link to="/" className="text-2xl font-bold">
+            <span className="text-iraq-green glow-text">IRAQ</span> <span className="text-iraq-gray">FUTURE</span>
           </Link>
         </div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-4">
-          {menuItems.map((item, index) => renderNavLink(item, index))}
+          <div className="flex items-center space-x-2">
+            {menuItems.map((item, index) => renderNavLink(item, index))}
+          </div>
           
-          <div className="ml-4 flex items-center gap-2">
+          <div className="ml-6 flex items-center">
             <button
               onClick={toggleLanguage}
-              className="flex items-center gap-2 text-iraq-gray hover:text-iraq-green transition-colors px-3 py-1 rounded-full border border-iraq-green-dark"
+              className="flex items-center gap-2 text-iraq-gray hover:text-iraq-green transition-all px-4 py-2 rounded-full border border-iraq-green/30 hover:border-iraq-green/70 bg-black/40 backdrop-blur-sm hover:bg-black/60 group"
             >
-              <Globe size={18} />
+              <Languages size={18} className="transition-transform group-hover:rotate-180 duration-500" />
               <span className="font-medium">{language === 'en' ? 'عربي' : 'English'}</span>
             </button>
           </div>
@@ -101,56 +105,56 @@ const Navigation: React.FC = () => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="text-iraq-gray hover:text-iraq-green transition-colors focus:outline-none"
+            aria-label="Toggle menu"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {mobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
+            <div className={`w-8 h-6 relative transform transition-all duration-500 ${mobileMenuOpen ? 'rotate-180' : ''}`}>
+              <span className={`absolute h-0.5 w-8 bg-iraq-green transform transition-all duration-500 ${mobileMenuOpen ? 'rotate-45 translate-y-2.5' : '-translate-y-2'}`}></span>
+              <span className={`absolute h-0.5 w-6 bg-iraq-green transform transition-all duration-500 ${mobileMenuOpen ? 'opacity-0' : 'opacity-100'}`}></span>
+              <span className={`absolute h-0.5 w-8 bg-iraq-green transform transition-all duration-500 ${mobileMenuOpen ? '-rotate-45 translate-y-2.5' : 'translate-y-2'}`}></span>
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Enhanced with animations */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-95 backdrop-blur-md z-40 flex flex-col justify-center items-center md:hidden transition-transform duration-500 ${
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col justify-center items-center md:hidden transition-all duration-500 ${
+          mobileMenuOpen 
+            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            : 'opacity-0 -translate-y-10 pointer-events-none'
         }`}
       >
         <div className="flex flex-col items-center space-y-8">
           {menuItems.map((item, index) => (
-            <div key={index} onClick={() => setMobileMenuOpen(false)}>
+            <div 
+              key={index} 
+              onClick={() => setMobileMenuOpen(false)}
+              className="transform transition-all duration-300"
+              style={{ transitionDelay: `${index * 50}ms` }}
+            >
               {renderNavLink(item, index)}
             </div>
           ))}
-          <div className="mt-4">
+          
+          <div className="mt-8 transform transition-all duration-300" style={{ transitionDelay: '300ms' }}>
             <button
-              onClick={toggleLanguage}
-              className="flex items-center gap-2 text-iraq-gray hover:text-iraq-green transition-colors px-4 py-2 rounded-full border border-iraq-green-dark"
+              onClick={() => {
+                toggleLanguage();
+                setMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-3 text-iraq-gray hover:text-iraq-green transition-colors px-5 py-3 rounded-full border border-iraq-green/30 hover:border-iraq-green bg-black/40"
             >
-              <Globe size={18} />
-              <span className="font-medium">{language === 'en' ? 'عربي' : 'English'}</span>
+              <Languages size={20} />
+              <span className="font-medium text-lg">{language === 'en' ? 'عربي' : 'English'}</span>
             </button>
           </div>
         </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 border border-iraq-green/20 rounded-full"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 border border-iraq-green/10 rounded-full"></div>
+        <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-iraq-green rounded-full animate-ping"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-2 h-2 bg-iraq-green rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
       </div>
     </nav>
   );

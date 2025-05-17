@@ -1,3 +1,4 @@
+
 interface Translations {
   [key: string]: {
     home: string;
@@ -33,6 +34,19 @@ interface Translations {
     aboutFeature2Description: string;
     aboutFeature3Title: string;
     aboutFeature3Description: string;
+    sendMessage: string;
+    sending: string;
+    messageSentSuccess: string;
+    messageSentDescription: string;
+    phone: string;
+    location: string;
+    scrollDown: string;
+    startYourDigitalProject: string;
+    contactNow: string;
+    welcomeMessage: string;
+    innovation: string;
+    expertise: string;
+    quality: string;
   };
 }
 
@@ -71,6 +85,19 @@ export const translations: Translations = {
     aboutFeature2Description: 'Our team brings years of experience across various industries.',
     aboutFeature3Title: 'Quality',
     aboutFeature3Description: 'We ensure the highest standards in everything we create.',
+    sendMessage: 'Send Message',
+    sending: 'Sending...',
+    messageSentSuccess: 'Message sent successfully!',
+    messageSentDescription: 'We will get back to you shortly.',
+    phone: 'Phone',
+    location: 'Location',
+    scrollDown: 'Scroll Down',
+    startYourDigitalProject: 'Start your digital project with ease',
+    contactNow: 'Contact Now',
+    welcomeMessage: 'I\'m here to design a distinctive website for you at reasonable prices with professional services tailored to your needs.',
+    innovation: 'Innovation',
+    expertise: 'Expertise',
+    quality: 'Quality',
   },
   ar: {
     home: 'الرئيسية',
@@ -106,5 +133,18 @@ export const translations: Translations = {
     aboutFeature2Description: 'يجلب فريقنا سنوات من الخبرة عبر مختلف الصناعات.',
     aboutFeature3Title: 'الجودة',
     aboutFeature3Description: 'نضمن أعلى المعايير في كل ما نبتكر.',
+    sendMessage: 'إرسال الرسالة',
+    sending: 'جاري الإرسال...',
+    messageSentSuccess: 'تم إرسال الرسالة بنجاح!',
+    messageSentDescription: 'سنعاود الاتصال بك قريبًا.',
+    phone: 'الهاتف',
+    location: 'الموقع',
+    scrollDown: 'انتقل للأسفل',
+    startYourDigitalProject: 'ابدأ مشروعك الرقمي بسهولة',
+    contactNow: 'تواصل الآن',
+    welcomeMessage: 'أنا هنا لأصمم لك موقعًا إلكترونيًا مميزًا بأسعار مناسبة وخدمات احترافية تناسب احتياجاتك.',
+    innovation: 'الابتكار',
+    expertise: 'الخبرة',
+    quality: 'الجودة',
   },
 };
