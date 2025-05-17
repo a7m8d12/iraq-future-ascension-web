@@ -1,4 +1,3 @@
-
 interface Translations {
   [key: string]: {
     home: string;
@@ -25,6 +24,15 @@ interface Translations {
     visitWebsite: string;
     our: string;
     all: string;
+    aboutUs: string;
+    aboutDescription1: string;
+    aboutDescription2: string;
+    aboutFeature1Title: string;
+    aboutFeature1Description: string;
+    aboutFeature2Title: string;
+    aboutFeature2Description: string;
+    aboutFeature3Title: string;
+    aboutFeature3Description: string;
   };
 }
 
@@ -54,6 +62,15 @@ export const translations: Translations = {
     visitWebsite: 'Visit Website',
     our: 'Our',
     all: 'All',
+    aboutUs: 'About Us',
+    aboutDescription1: 'We are a forward-thinking digital agency focused on creating innovative solutions that help businesses thrive in the digital era.',
+    aboutDescription2: 'With our team of experts, we deliver cutting-edge technology solutions tailored to meet the unique needs of each client.',
+    aboutFeature1Title: 'Innovation',
+    aboutFeature1Description: 'We push the boundaries of what\'s possible with technology.',
+    aboutFeature2Title: 'Expertise',
+    aboutFeature2Description: 'Our team brings years of experience across various industries.',
+    aboutFeature3Title: 'Quality',
+    aboutFeature3Description: 'We ensure the highest standards in everything we create.',
   },
   ar: {
     home: 'الرئيسية',
@@ -80,5 +97,14 @@ export const translations: Translations = {
     visitWebsite: 'زيارة الموقع',
     our: 'لدينا',
     all: 'الكل',
+    aboutUs: 'من نحن',
+    aboutDescription1: 'نحن وكالة رقمية تتطلع إلى المستقبل وتركز على إنشاء حلول مبتكرة تساعد الشركات على الازدهار في العصر الرقمي.',
+    aboutDescription2: 'مع فريقنا من الخبراء، نقدم حلولاً تكنولوجية متطورة مصممة خصيصاً لتلبية الاحتياجات الفريدة لكل عميل.',
+    aboutFeature1Title: 'الابتكار',
+    aboutFeature1Description: 'نحن نتخطى حدود ما هو ممكن مع التكنولوجيا.',
+    aboutFeature2Title: 'الخبرة',
+    aboutFeature2Description: 'يجلب فريقنا سنوات من الخبرة عبر مختلف الصناعات.',
+    aboutFeature3Title: 'الجودة',
+    aboutFeature3Description: 'نضمن أعلى المعايير في كل ما نبتكر.',
   },
 };
