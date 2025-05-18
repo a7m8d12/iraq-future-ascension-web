@@ -7,16 +7,18 @@ import ParticleBackground from '@/components/ParticleBackground';
 import AdminPortfolioManager from '@/components/admin/AdminPortfolioManager';
 import AdminPartnersManager from '@/components/admin/AdminPartnersManager';
 import AdminAnnouncementsManager from '@/components/admin/AdminAnnouncementsManager';
+import AdminMessagesManager from '@/components/admin/AdminMessagesManager';
 import { toast } from 'sonner';
 
 const Admin: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'portfolio' | 'partners' | 'announcements'>('portfolio');
+  const [activeTab, setActiveTab] = useState<'portfolio' | 'partners' | 'announcements' | 'messages'>('portfolio');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [stats, setStats] = useState({
     portfolioCount: 0,
     partnersCount: 0,
-    announcementsCount: 0
+    announcementsCount: 0,
+    messagesCount: 0
   });
   const navigate = useNavigate();
 
@@ -59,15 +61,21 @@ const Admin: React.FC = () => {
         .from('announcements')
         .select('*', { count: 'exact', head: true });
 
-      if (portfolioError || partnersError || announcementsError) {
-        console.error('Error fetching stats:', portfolioError || partnersError || announcementsError);
+      // Fetch messages count
+      const { count: messagesCount, error: messagesError } = await supabase
+        .from('contact_messages')
+        .select('*', { count: 'exact', head: true });
+
+      if (portfolioError || partnersError || announcementsError || messagesError) {
+        console.error('Error fetching stats:', portfolioError || partnersError || announcementsError || messagesError);
         return;
       }
 
       setStats({
         portfolioCount: portfolioCount || 0,
         partnersCount: partnersCount || 0,
-        announcementsCount: announcementsCount || 0
+        announcementsCount: announcementsCount || 0,
+        messagesCount: messagesCount || 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -120,7 +128,7 @@ const Admin: React.FC = () => {
         <div className="container mx-auto">
           <h2 className="text-xl font-semibold text-white mb-6">Dashboard</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-iraq-dark bg-opacity-70 backdrop-blur-sm border border-iraq-green-dark rounded-lg p-6 hover:border-iraq-green transition-all duration-300">
               <h3 className="text-iraq-gray text-lg mb-2">Portfolio Items</h3>
               <p className="text-3xl font-bold text-white">{stats.portfolioCount}</p>
@@ -134,6 +142,11 @@ const Admin: React.FC = () => {
             <div className="bg-iraq-dark bg-opacity-70 backdrop-blur-sm border border-iraq-green-dark rounded-lg p-6 hover:border-iraq-green transition-all duration-300">
               <h3 className="text-iraq-gray text-lg mb-2">Announcements</h3>
               <p className="text-3xl font-bold text-white">{stats.announcementsCount}</p>
+            </div>
+
+            <div className="bg-iraq-dark bg-opacity-70 backdrop-blur-sm border border-iraq-green-dark rounded-lg p-6 hover:border-iraq-green transition-all duration-300">
+              <h3 className="text-iraq-gray text-lg mb-2">Messages</h3>
+              <p className="text-3xl font-bold text-white">{stats.messagesCount}</p>
             </div>
           </div>
         </div>
@@ -173,6 +186,16 @@ const Admin: React.FC = () => {
             >
               Announcements Manager
             </button>
+            <button
+              className={`px-4 py-2 font-medium ${
+                activeTab === 'messages'
+                  ? 'text-iraq-green border-b-2 border-iraq-green'
+                  : 'text-iraq-gray hover:text-white'
+              }`}
+              onClick={() => setActiveTab('messages')}
+            >
+              Messages Manager
+            </button>
           </div>
           
           {activeTab === 'portfolio' && (
@@ -185,6 +208,10 @@ const Admin: React.FC = () => {
           
           {activeTab === 'announcements' && (
             <AdminAnnouncementsManager onUpdate={fetchStats} />
+          )}
+
+          {activeTab === 'messages' && (
+            <AdminMessagesManager />
           )}
         </div>
       </section>

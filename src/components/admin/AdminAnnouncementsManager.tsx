@@ -238,7 +238,7 @@ const AdminAnnouncementsManager: React.FC<{ onUpdate: () => void }> = ({ onUpdat
                           تعديل
                         </FuturisticButton>
                         <FuturisticButton 
-                          variant="destructive" 
+                          variant="outline" 
                           size="sm" 
                           onClick={() => handleDelete(announcement.id)}
                         >

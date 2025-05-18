@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
 import FuturisticButton from './FuturisticButton';
@@ -6,6 +7,7 @@ import { translations } from '@/utils/translations';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import { Element } from 'react-scroll';
 import { supabase } from '@/integrations/supabase/client';
+
 const ContactSection: React.FC = () => {
   const {
     language,
@@ -25,6 +27,7 @@ const ContactSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
@@ -47,10 +50,12 @@ const ContactSection: React.FC = () => {
       observer.disconnect();
     };
   }, []);
+
   const validateEmail = (email: string) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email.toLowerCase());
   };
+
   const validateField = (name: string, value: string) => {
     switch (name) {
       case 'name':
@@ -63,6 +68,7 @@ const ContactSection: React.FC = () => {
         return '';
     }
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
       name,
@@ -80,6 +86,7 @@ const ContactSection: React.FC = () => {
       [name]: errorMessage
     }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -95,19 +102,21 @@ const ContactSection: React.FC = () => {
     if (Object.values(newErrors).some(error => error)) {
       return;
     }
+
     setIsSubmitting(true);
     try {
-      // Store the message in Supabase
-      const {
-        error
-      } = await supabase.from('contact_messages').insert([{
-        name: form.name,
-        email: form.email,
-        message: form.message
-      }]);
+      // Store the message in Supabase - use insert method directly
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({
+          name: form.name,
+          email: form.email,
+          message: form.message
+        });
+
       if (error) {
         console.error('Error submitting message:', error);
-        // Still show success message to the user, but log the error
+        throw error;
       }
 
       // Show success message
@@ -129,6 +138,7 @@ const ContactSection: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
   return <Element name="contact" className="py-24 relative" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Note: Moving ref to this div that's guaranteed to exist */}
       <div ref={sectionRef} className="absolute inset-0"></div>
